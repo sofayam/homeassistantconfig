@@ -1,0 +1,65 @@
+# Secrets and credentials
+secrets.yaml
+*.db-shm
+*.db-wal
+*.db
+*.log
+*.db-journal
+
+# Storage folder - managed by HA, contains UI configs and internal state
+.storage/
+.cloud/
+.google.token
+
+# Generated/cached files
+*.pyc
+__pycache__/
+*.uuid
+.HA_VERSION
+
+# Temporary files
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Dependencies and add-on data
+deps/
+tts/
+www/
+custom_components/
+blueprints/
+
+# Certificate files
+*.pem
+*.key
+*.crt
+
+# IP bans and known devices (contains private info)
+ip_bans.yaml
+known_devices.yaml
+
+# OZW (if you use it)
+OZW_Log.txt
+ozw/
+
+# Node-RED (if installed)
+node-red/
+
+# ESPHome (if you use it)
+esphome/
+
+# AppDaemon (if you use it)
+appdaemon/
+
+# Zigbee databases
+zigbee.db
+zigbee.db-wal
+zigbee.db-shm
+
+.ha_run.lock
+
+*.log.fault

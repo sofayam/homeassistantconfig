@@ -1,0 +1,72 @@
+pausecavefridge:
+  sequence:
+  - type: turn_off
+    device_id: 62b66acc29b5145654ead961c66a1a17
+    entity_id: ed5670f041c4dfacadc219f2ebeeb16e
+    domain: switch
+    metadata:
+      secondary: false
+  - delay:
+      hours: 0
+      minutes: 41
+      seconds: 0
+      milliseconds: 0
+  - type: turn_on
+    device_id: 62b66acc29b5145654ead961c66a1a17
+    entity_id: ed5670f041c4dfacadc219f2ebeeb16e
+    domain: switch
+  alias: PauseCaveFridge
+  description: ''
+notifytitan:
+  sequence:
+  - sequence:
+    - action: notify.mobile_app_titan
+      metadata: {}
+      data:
+        message: Finish
+        data:
+          push:
+            sound: EndChime.wav
+  alias: NotifyTitan
+  description: ''
+notifytitanchime:
+  sequence:
+  - sequence:
+    - action: notify.mobile_app_titan
+      metadata: {}
+      data:
+        message: Finish
+        data:
+          push:
+            sound: Chime.wav
+  alias: NotifyTitanChime
+  description: ''
+meditate:
+  sequence:
+  - type: turn_off
+    device_id: 62b66acc29b5145654ead961c66a1a17
+    entity_id: ed5670f041c4dfacadc219f2ebeeb16e
+    domain: switch
+    metadata:
+      secondary: false
+  - alias: Repeat chime n times
+    repeat:
+      count: 4
+      sequence:
+      - action: script.notifytitanchime
+        metadata: {}
+        data: {}
+      - delay:
+          hours: 0
+          minutes: 10
+          seconds: 0
+          milliseconds: 0
+  - action: script.notifytitan
+    metadata: {}
+    data: {}
+  - type: turn_on
+    device_id: 62b66acc29b5145654ead961c66a1a17
+    entity_id: ed5670f041c4dfacadc219f2ebeeb16e
+    domain: switch
+  alias: Meditate
+  description: ''

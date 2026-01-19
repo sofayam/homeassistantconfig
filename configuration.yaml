@@ -1,0 +1,50 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+recorder:
+  purge_keep_days: 365
+  exclude:
+    domains:
+      - sun
+      - weather
+      
+input_number: 
+  pellet_oven_hours_at_last_refill:
+    name: Pellet Oven Hours at Last Refill
+    min: 0
+    max: 10000
+    step: 0.1
+
+  pellet_oven_hours_per_refill:  # ADD THIS
+    name: Pellet Oven Hours Per Refill
+    min: 0
+    max: 200
+    step: 0.1
+
+input_datetime:
+  last_pellet_refill_time:
+    name: Last Pellet Refill Time
+    has_date: true
+    has_time: true
+
+input_button:
+  pellet_oven_refill:
+    name: Pellet Oven Refill
+
+# ADD THIS WHOLE SECTION:
+template:
+  - sensor:
+      - name: "Pellet Oven Hours Since Refill"
+        unit_of_measurement: "h"
+        state: >
+          {{ (states('sensor.ecoforest_working_time') | float - 
+              states('input_number.pellet_oven_hours_at_last_refill') | float) | round(1) }}

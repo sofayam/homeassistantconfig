@@ -1,0 +1,33 @@
+- id: '1767269253102'
+  alias: Meditate
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: script.meditate
+    metadata: {}
+    data: {}
+  mode: single
+
+
+- id: '1737304800000'
+  alias: Record Pellet Refill
+  trigger:
+    - platform: state
+      entity_id: input_button.pellet_oven_refill  # or button.pellet_oven_refill - check which exists!
+  action:
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.pellet_oven_hours_per_refill
+      data:
+        value: "{{ states('sensor.pellet_oven_hours_since_refill') | float(0) }}"
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.pellet_oven_hours_at_last_refill
+      data:
+        value: "{{ states('sensor.ecoforest_working_time') | float(0) }}"
+    - service: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.last_pellet_refill_time
+      data:
+        timestamp: "{{ now().timestamp() }}"
