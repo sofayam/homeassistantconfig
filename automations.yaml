@@ -8,26 +8,46 @@
     metadata: {}
     data: {}
   mode: single
-
-
 - id: '1737304800000'
   alias: Record Pellet Refill
   trigger:
-    - platform: state
-      entity_id: input_button.pellet_oven_refill  # or button.pellet_oven_refill - check which exists!
+  - platform: state
+    entity_id: input_button.pellet_oven_refill
   action:
-    - service: input_number.set_value
-      target:
-        entity_id: input_number.pellet_oven_hours_per_refill
-      data:
-        value: "{{ states('sensor.pellet_oven_hours_since_refill') | float(0) }}"
-    - service: input_number.set_value
-      target:
-        entity_id: input_number.pellet_oven_hours_at_last_refill
-      data:
-        value: "{{ states('sensor.ecoforest_working_time') | float(0) }}"
-    - service: input_datetime.set_datetime
-      target:
-        entity_id: input_datetime.last_pellet_refill_time
-      data:
-        timestamp: "{{ now().timestamp() }}"
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.pellet_oven_hours_per_refill
+    data:
+      value: '{{ states(''sensor.pellet_oven_hours_since_refill'') | float(0) }}'
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.pellet_oven_hours_at_last_refill
+    data:
+      value: '{{ states(''sensor.ecoforest_working_time'') | float(0) }}'
+  - service: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.last_pellet_refill_time
+    data:
+      timestamp: '{{ now().timestamp() }}'
+- id: '1777987697815'
+  alias: Garden Watering - Rain Check
+  description: Water for 5 min at 8am/8pm if less than 3mm rain in last 24h
+  triggers:
+  - at: 08:00:00
+    trigger: time
+  - at: '20:00:00'
+    trigger: time
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.rainfall_last_24h
+    below: 3
+  actions:
+  - target:
+      entity_id: switch.sonoff_swv
+    action: switch.turn_on
+  - delay:
+      minutes: 5
+  - target:
+      entity_id: switch.sonoff_swv
+    action: switch.turn_off
+  mode: single

@@ -41,10 +41,31 @@ input_button:
     name: Pellet Oven Refill
 
 # ADD THIS WHOLE SECTION:
+
 template:
   - sensor:
       - name: "Pellet Oven Hours Since Refill"
         unit_of_measurement: "h"
         state: >
-          {{ (states('sensor.ecoforest_working_time') | float - 
-              states('input_number.pellet_oven_hours_at_last_refill') | float) | round(1) }}
+          {{ (states('sensor.ecoforest_working_time') | float(0) - 
+              states('input_number.pellet_oven_hours_at_last_refill') | float(0)) | round(1) }}
+
+
+sensor:
+  - platform: rest
+    name: "rainfall_last_24h"
+    unique_id: rainfall_last_24h
+    resource: "https://api.open-meteo.com/v1/forecast?latitude=37.14&longitude=-8.54&hourly=precipitation&past_days=1&forecast_days=0&timezone=Europe%2FLisbon"
+    value_template: >
+      {{ value_json.hourly.precipitation[-24:] | sum | round(2) }}
+    unit_of_measurement: "mm"
+    scan_interval: 21600
+    
+  - platform: rest
+    name: "rainfall_yesterday_mm"
+    unique_id: rainfall_yesterday_mm
+    resource: "https://api.open-meteo.com/v1/forecast?latitude=37.14&longitude=-8.54&daily=precipitation_sum&past_days=1&forecast_days=0&timezone=Europe%2FLisbon"
+    value_template: >
+      {{ value_json.daily.precipitation_sum[0] }}
+    unit_of_measurement: "mm"
+    scan_interval: 86400
